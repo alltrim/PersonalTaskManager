@@ -188,7 +188,7 @@
 
     $.fn.tasks = function () {
         this.addClass("tasks-content");
-        var tasksContent = createContent(this);
+        createContent(this);
         return this;
     }
 
