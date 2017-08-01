@@ -1,0 +1,39 @@
+﻿@model PersonalTaskManager.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login/Register";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="login-form">
+
+        <div>
+            <h2>Personal Task Manager</h2>
+        </div>
+
+        <div>
+            <p class="login-form-message">
+                @Html.DisplayFor(model => model.Message)
+            </p>
+        </div>
+
+        <div>
+            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @placeholder = "User name" } })
+        </div>
+
+        <div>
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @placeholder = "Password", @type = "password" } })
+        </div>
+
+        <div>
+            <input class="login-sign-in" type="submit" value="Sign in" />
+        </div>
+
+    </div>
+
+}
+

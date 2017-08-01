@@ -1,0 +1,43 @@
+﻿
+html {
+    font-family: sans-serif;
+}
+
+body {
+}
+
+.login-form {
+    text-align: center;
+    margin-top: 15%;
+}
+
+    .login-form input[type=text], input[type=password] {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 245px;
+    }
+
+    .login-form h2 {
+        text-align: center;
+    }
+
+.login-form-message {
+    color: red;
+    font-weight: bold;
+}
+
+.login-sign-in {
+    border-width: 0;
+    border-radius: 10px;
+    background-color: #3D8BCD;
+    color: white;
+    margin-top: 10px;
+    padding: 10px 30px 10px 30px;
+    width: initial;
+}
+
+    .login-sign-in:active {
+        transform: translate(2px, 2px);
+    }
