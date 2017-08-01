@@ -20,7 +20,15 @@ namespace PersonalTaskManager.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 string userName = User.Identity.Name;
-                return getTasksFor(userName);
+
+                try
+                {
+                    return getTasksFor(userName);
+                }
+                catch
+                {
+                    StatusCode(HttpStatusCode.InternalServerError);
+                }
             }
 
             return new object[] { };
@@ -30,6 +38,7 @@ namespace PersonalTaskManager.Controllers
         // GET api/tasks/5
         public string Get(int id)
         {
+            StatusCode(HttpStatusCode.NotImplemented);
             return "";
         }
 
@@ -41,33 +50,32 @@ namespace PersonalTaskManager.Controllers
             {
                 string userName = User.Identity.Name;
 
-                using (TasksContext context = new TasksContext())
+                try
                 {
-                    value.Owner = context.Users.Where(user => user.UserName == userName).First();
-                    value.LastUpdate = DateTime.Now;
-
-                    if (value.TaskId == 0)
+                    using (TasksContext context = new TasksContext())
                     {
-                        context.Tasks.Add(new Task {
+                        value.Owner = context.Users.Where(user => user.UserName == userName).First();
+                        value.LastUpdate = DateTime.Now;
+
+                        context.Tasks.Add(new Task
+                        {
                             Title = value.Title,
                             Content = value.Content,
                             Owner = value.Owner,
                             LastUpdate = value.LastUpdate
                         });
-                    }
-                    else
-                    {
-                        var taskEntity = context.Tasks.Where(task => task.TaskId == value.TaskId).First();
-                        taskEntity.Title = value.Title;
-                        taskEntity.Content = value.Content;
-                        taskEntity.LastUpdate = value.LastUpdate;
+
+                        context.SaveChanges();
+
                     }
 
-                    context.SaveChanges();
+                    return getTasksFor(userName);
 
                 }
-
-                return getTasksFor(userName);
+                catch
+                {
+                    StatusCode(HttpStatusCode.InternalServerError);
+                }
 
             }
 
@@ -76,8 +84,42 @@ namespace PersonalTaskManager.Controllers
         }
 
         // PUT api/tasks/5
-        public void Put(int id, [FromBody]string value)
+        [Authorize]
+        public IEnumerable<object> Put(int id, [FromBody]Task value)
         {
+
+            if (User.Identity.IsAuthenticated)
+            {
+                string userName = User.Identity.Name;
+
+                try
+                {
+                    using (TasksContext context = new TasksContext())
+                    {
+                        value.Owner = context.Users.Where(user => user.UserName == userName).First();
+                        value.LastUpdate = DateTime.Now;
+
+                        var taskEntity = context.Tasks.Where(task => task.TaskId == id).First();
+                        taskEntity.Title = value.Title;
+                        taskEntity.Content = value.Content;
+                        taskEntity.LastUpdate = value.LastUpdate;
+
+                        context.SaveChanges();
+
+                    }
+
+                    return getTasksFor(userName);
+
+                }
+                catch
+                {
+                    StatusCode(HttpStatusCode.InternalServerError);
+                }
+
+            }
+
+            return new object[] { };
+
         }
 
         // DELETE api/tasks/5
@@ -88,15 +130,22 @@ namespace PersonalTaskManager.Controllers
             {
                 string userName = User.Identity.Name;
 
-                using (TasksContext context = new TasksContext())
+                try
                 {
-                    var taskEntity = context.Tasks.Where(task => task.TaskId == id).First();
-                    context.Tasks.Remove(taskEntity);
-                    context.SaveChanges();
+                    using (TasksContext context = new TasksContext())
+                    {
+                        var taskEntity = context.Tasks.Where(task => task.TaskId == id).First();
+                        context.Tasks.Remove(taskEntity);
+                        context.SaveChanges();
 
+                    }
+
+                    return getTasksFor(userName);
                 }
-
-                return getTasksFor(userName);
+                catch
+                {
+                    StatusCode(HttpStatusCode.InternalServerError);
+                }
 
             }
 

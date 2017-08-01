@@ -93,8 +93,8 @@
         };
 
         $.ajax({
-            type: "POST",
-            url: "../api/tasks",
+            type: taskId == 0 ? "POST" : "PUT",
+            url: "../api/tasks" + (taskId == 0 ? "" : "/" + taskId),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: JSON.stringify(item),
