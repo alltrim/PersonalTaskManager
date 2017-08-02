@@ -20,6 +20,10 @@
     padding: 10px 30px 0px 30px;
 }
 
+.tasks-list {
+    clear: both;
+}
+
 .tasks-tools {
     text-align: left;
     padding-bottom: 10px;
@@ -35,6 +39,21 @@
 
 .tasks-tools-button:active {
     transform: translate(2px, 2px);
+}
+
+.tasks-tools-search {
+    float: right;
+    text-align: right;
+
+}
+
+#search-field {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 7px 10px 7px 10px;
+    font-size: 12pt;
+    display: block;
+
 }
 
 .tasks-list-item {

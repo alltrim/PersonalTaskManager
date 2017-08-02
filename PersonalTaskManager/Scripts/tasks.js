@@ -5,7 +5,7 @@
 
     function addNewTask(parent) {
 
-        updateTask(parent, 0); 
+        updateTask(parent, 0);
 
     }
 
@@ -20,6 +20,7 @@
             url: "../api/tasks/" + taskId,
             dataType: "json",
             success: function (data) {
+                Items = data;
                 redrawItems(parent, data);
                 //updateItems(parent);
             }
@@ -103,6 +104,7 @@
                 $(".task-editor").remove("*");
                 $(".tasks-modal-background").remove("*");
 
+                Items = data;
                 redrawItems(parent, data);
                 //updateItems(parent);
             }
@@ -116,6 +118,7 @@
             // Для простоты каждый раз буду перечитывать все задачи и полностью перерисовывать список.
             // Хотя по-хорошему надо бы отслеживать только измененные записи и перерисовывать только их...
 
+            Items = data;
             redrawItems(parent, data);
 
         });
@@ -123,14 +126,37 @@
 
     function redrawItems(parent, items) {
 
-        Items = items;
+        //Items = items;
 
         var tasksList = $(parent).find(".tasks-list").first();
         tasksList.children().remove("*");
 
-        for (var i in Items) {
-            createItem(parent, tasksList, Items[i]);
+        for (var i in items) {
+            createItem(parent, tasksList, items[i]);
         }
+
+    }
+
+    function searchItems(parent, searchString) {
+
+        var items = [];
+        var ss = searchString.toLowerCase();
+
+        for (var i in Items) {
+            var $item = $(Items[i]);
+            if ($item.attr("Title").toLowerCase().indexOf(ss) >= 0 || $item.attr("Content").toLowerCase().indexOf(ss) >= 0)
+            {
+                items.push(Items[i]);
+            }
+        }
+
+        redrawItems(parent, items);
+
+    }
+
+    function searchCancel(parent) {
+
+        redrawItems(parent, Items);
 
     }
 
@@ -176,11 +202,25 @@
             addNewTask(parent);
         });
 
+        var searchElem = $("<div></div>").addClass("tasks-tools-search")
+            .html("<input type='text' id='search-field' name='search-field' value='' placeholder='Search'/>");
+
         tasksTools.append(newTaskButton);
+        tasksTools.append(searchElem);
         tasksBody.append(tasksTools);
         tasksBody.append(tasksList);
 
         parent.append(tasksBody);
+
+        $("#search-field").on('input', function () {
+            var val = $(this).val();
+            if (val.length >= 3) {
+                searchItems(parent, val);
+            }
+            else {
+                searchCancel(parent);
+            }
+        });
 
         updateItems(parent);
 
