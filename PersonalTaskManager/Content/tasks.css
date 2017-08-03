@@ -178,3 +178,8 @@
 .update_task_save_container button {
     margin-bottom: 15px;
 }
+
+.search-selection {
+    background-color: yellow !important;
+    color: black !important;
+}

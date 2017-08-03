@@ -144,7 +144,9 @@
 
         for (var i in Items) {
             var $item = $(Items[i]);
-            if ($item.attr("Title").toLowerCase().indexOf(ss) >= 0 || $item.attr("Content").toLowerCase().indexOf(ss) >= 0)
+            if ($item.attr("Title").toLowerCase().indexOf(ss) >= 0
+                || $item.attr("Content").toLowerCase().indexOf(ss) >= 0
+                || $item.attr("LastUpdate").toLowerCase().indexOf(ss) >= 0)
             {
                 items.push(Items[i]);
             }
@@ -152,6 +154,22 @@
 
         redrawItems(parent, items);
 
+        $(".task-item-content > p").html(function (index, html) {
+            return searchShowSelection(html, ss);
+        });
+
+        $(".task-item-title > h2").html(function (index, html) {
+            return searchShowSelection(html, ss);
+        });
+
+        $(".task-item-footer > span").html(function (index, html) {
+            return searchShowSelection(html, ss);
+        });
+    }
+
+    function searchShowSelection(html, ss) {
+        re = new RegExp('(' + ss + ')', 'gi');
+        return html.replace(re, "<span class='search-selection'>$1</span>");
     }
 
     function searchCancel(parent) {
@@ -214,7 +232,7 @@
 
         $("#search-field").on('input', function () {
             var val = $(this).val();
-            if (val.length >= 3) {
+            if (val.length > 1) {
                 searchItems(parent, val);
             }
             else {
